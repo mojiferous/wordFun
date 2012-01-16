@@ -104,7 +104,7 @@ class word {
             }
         }
         
-        return $this->word;
+        return $this;
         
     }
 }
