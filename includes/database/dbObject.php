@@ -15,14 +15,6 @@ class dbObject {
         $this->connect($settings);
     }
 
-    public function cleanInput($thisString) {
-        //let's clean up the input, so illegal characters can't be input, preventing sql insertion
-        $thisString = htmlspecialchars($thisString, ENT_QUOTES);
-        $thisString = strip_tags($thisString);
-        return $thisString;
-    }
-
-
     private function connect($settings) {
         //called from instantiation to connect to the database set in defaults.ini
         //the system looks to the defaults set in defaults.ini to gather these variables

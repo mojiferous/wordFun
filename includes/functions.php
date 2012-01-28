@@ -11,6 +11,7 @@
 require_once 'classes/rest.php';
 require_once 'defaults/defaults.php';
 require_once 'database/dbObject.php';
+require_once 'classes/preferences.php';
 require_once 'classes/wordnik/wordnikClass.php';
 
 require_once 'classes/word.php';
@@ -20,6 +21,8 @@ require_once 'classes/sentence.php';
 $defaults = new defaults();
 
 $connection = new dbObject($defaults->settings['database']);
+$prefs = new preferences($connection);
+
 $globalWordnik = new wordnikClass($defaults->settings['wordnik']);
 
 $passedWord = parseGet('word', '');

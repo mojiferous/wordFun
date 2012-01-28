@@ -12,6 +12,9 @@
  * @author Mojiferous
  * Jan 10, 2012
  */
+
+require_once 'rest.php';
+
 class docParser {
     private $word;
     private $file;

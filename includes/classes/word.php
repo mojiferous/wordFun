@@ -38,7 +38,7 @@ class word {
     
     private function loadWordFromId($id) {
         //load a word from an id, useful for passed queries on the website
-        $id = $this->dbConnection->cleanInput($id);
+        $id = cleanInput($id);
         
         $retVal = $this->dbConnection->selectQuery(
             $this->allRows,
@@ -50,7 +50,7 @@ class word {
     
     private function loadWordFromWord($word) {
         //load a word from a word
-        $thisWord = $this->dbConnection->cleanInput($word);
+        $thisWord = cleanInput($word);
         
         $retVal = $this->dbConnection->selectQuery(
             $this->allRows,

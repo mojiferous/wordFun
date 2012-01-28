@@ -39,7 +39,7 @@ class sentence {
     
     private function loadSentenceFromId($id) {
         //load a sentence from an id, useful for passed values
-        $id = $this->dbConnection->cleanInput($id);
+        $id = cleanInput($id);
         
         $retVal = $this->dbConnection->selectQuery(
             $this->allRows,
@@ -51,7 +51,7 @@ class sentence {
     
     private function loadSentenceFromSentence($sentence) {
         //load a sentence from a extant sentence
-        $thisSentence = $this->dbConnection->cleanInput($sentence);
+        $thisSentence = cleanInput($sentence);
         
         $retVal = $this->dbConnection->selectQuery(
             $this->allRows,
