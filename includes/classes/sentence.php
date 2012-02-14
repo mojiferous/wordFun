@@ -76,17 +76,26 @@ class sentence {
     }
     
     private function cleanWord($word, $retType = 0) {
-        $newWord = str_ireplace('"', '', $word);
-        $newWord = str_ireplace("'", '', $word);
-        $newWord = str_ireplace(',', '', $word);
-        $newWord = str_ireplace('(', '', $word);
-        $newWord = str_ireplace(')', '', $word);
-        
+        $newWord = $word;
+        for($n=0; $n<65; $n++) {
+            //replace NUL through @
+            $newWord = str_ireplace(chr($n), "", $newWord);
+        }
+        for($n=91; $n<97; $n++) {
+            //replace [ through `
+            $newWord = str_ireplace(chr($n), "", $newWord);
+        }
+        for($n=123; $n<128; $n++) {
+            //replace { through DEL
+            $newWord = str_ireplace(chr($n), "", $newWord);
+        }
+        $newWord = trim($newWord);
+
         if ($retType == 0) {
             //return only the newWord
             return $newWord;
         } else {
-            return str_ireplace($newWord, '{'.$newWord.'}', $word);
+            return str_ireplace($newWord, '{'.$newWord.'}', $newWord);
         }
     }
     
@@ -110,10 +119,13 @@ class sentence {
                 $replWord = $this->cleanWord($indWord,1);
                 
                 $thisWord = new word($this->dbConnection, $this->wordnik);
-                $thisWord = $thisWord->returnWord($searchWord);
+                $thisWord = $thisWord->returnWord(strtolower($searchWord));
                 
-                $finalWord = str_ireplace("{".$indWord."}", "{".$thisWord->speechPart."}", $replWord);
-                if ($thisWord->speechPart != 'proper noun') {
+                $finalWord = str_ireplace("{".$searchWord."}", "{".$thisWord->speechPart."}", $replWord);
+                if ($thisWord->speechPart != 'proper noun' 
+                        && $thisWord->speechPart != 'preposition' 
+                        && $thisWord->speechPart != 'definite-article' 
+                        && $thisWord->speechPart != 'conjunction') {
                     //the word is not a proper noun, replace it in $withProp
                     $withProp = str_ireplace($indWord, $finalWord, $withProp);
                 }

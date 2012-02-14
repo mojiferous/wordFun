@@ -52,12 +52,16 @@ class docParser {
                         $final .= ".";
                     }
                     
-                    $final = str_ireplace("'", "", $final);
+                    $newSent = new sentence($this->dbConnection, $this->wordnik);
+                    
+                    $final = str_ireplace(chr(10), " ", $final);
+                    $final = str_ireplace(chr(13), " ", $final);
+                    $newSent->returnSentence($final);
                     
                     //pass to sentence and make sure you parse out non-letters
                     //echo $final."<br/>";
                 }
-                
+                die;
             }
         }
         
@@ -73,14 +77,12 @@ class docParser {
                 $new_line = str_ireplace("...", "-", $new_line);
                 
                 $this_line .= $new_line;
-                //echo $this_line." || <br/>";
             }
             
             fclose($file);
             
             $parsed_file = explode(".", $this_line);
             $this->parseArray($parsed_file);
-            //print_r($parsed_file);
         }
     }
 }

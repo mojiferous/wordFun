@@ -76,16 +76,19 @@ class word {
     }
     
     public function returnWord($word) {
+        
         //check a word against the database, and either return
         //the database query or the wordnik definition
         $this->loadWordFromWord($word);
-        
         if ($this->id > 0) {
             //the word exists in the database, return the word
             
         } else {
+            
             //the word does not exist, query wordnik and then add it to the database
-            $retVal = $this->wordnik->returnDefinition($word);
+            if(!is_null($word) && trim($word) != '') {
+                $retVal = $this->wordnik->returnDefinition($word);
+            }
             
             if (isset($retVal[0])) {
                 //the word exists in wordnik
