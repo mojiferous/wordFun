@@ -57,11 +57,8 @@ class docParser {
                     $final = str_ireplace(chr(10), " ", $final);
                     $final = str_ireplace(chr(13), " ", $final);
                     $newSent->returnSentence($final);
-                    
-                    //pass to sentence and make sure you parse out non-letters
-                    //echo $final."<br/>";
+
                 }
-                die;
             }
         }
         

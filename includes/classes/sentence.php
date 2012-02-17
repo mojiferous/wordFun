@@ -127,14 +127,16 @@ class sentence {
                         && $thisWord->speechPart != 'definite-article' 
                         && $thisWord->speechPart != 'conjunction') {
                     //the word is not a proper noun, replace it in $withProp
-                    $withProp = str_ireplace($indWord, $finalWord, $withProp);
+                    $withProp[] = $finalWord;
+                } else {
+                    $withProp[] = $indWord;
                 }
-                $allParts = str_ireplace($indWord, $finalWord, $allParts);                
+                $allParts[] =$finalWord;                
             }
             
             $this->raw_sentence = $raw;
-            $this->with_proper = $withProp;
-            $this->all_parts = $allParts;
+            $this->with_proper = implode(" ", $withProp);
+            $this->all_parts = implode(" ", $allParts);
             
             $this->addSentence();
         }
