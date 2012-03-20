@@ -17,17 +17,27 @@ require_once 'rest.php';
 require_once 'sentence.php';
 
 class docParser {
-    private $word;
-    private $file;
-    private $dbConnection;
-    private $wordnik;
+    private $file; /**< the file passed to the docParser */
+    private $dbConnection; /**< the database connection */
+    private $wordnik; /**< the wordnik class */
 
     public function __construct($connection, $gWordnik) {
+        /**
+         * instantiate a new doc parser
+         * @param $connection dbConnection
+         * @param $gWordnik wordnik class 
+         */
         $this->dbConnection = $connection;
         $this->wordnik = $gWordnik;
     }
     
     private function parseArray($passArray) {
+        /**
+         * parse an array passed from parseDoc, the array is the document
+         * chopped up into different sentences
+         * @param $passArray array of sentences
+         */
+        $retArray = array();
         foreach ($passArray as $line) {
             $q_expl = explode("?", $line);
             if(count($q_expl) > 1) {
@@ -56,7 +66,7 @@ class docParser {
                     
                     $final = str_ireplace(chr(10), " ", $final);
                     $final = str_ireplace(chr(13), " ", $final);
-                    $newSent->returnSentence($final);
+                    $retArray[] = $newSent->returnSentence($final);
 
                 }
             }
@@ -66,8 +76,16 @@ class docParser {
     }
     
     public function parseDoc($filename) {
+        /**
+         * parse the passed document into lines separated by a period
+         * @param $filename string filename 
+         * @return array of sentences parsed by the sentence parser
+         */
+        $retVal = array();
         if(file_exists($filename)) {
             $file = fopen($filename, "r");
+            
+            $this->file = $file;
             
             while(!feof($file)) {
                 $new_line = fgets($file);
@@ -79,8 +97,10 @@ class docParser {
             fclose($file);
             
             $parsed_file = explode(".", $this_line);
-            $this->parseArray($parsed_file);
+            $retVal[] = $this->parseArray($parsed_file);
         }
+        
+        return $retVal;
     }
 }
 

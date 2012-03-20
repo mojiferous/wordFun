@@ -12,25 +12,33 @@ require_once 'rest.php';
 require_once 'word.php';
 
 class sentence {
-    public $raw_sentence;
-    public $with_proper;
-    public $all_parts;
+    public $raw_sentence; /**< the raw, unparsed sentence */
+    public $with_proper; /**< the sentence with everything parsed by proper nouns */
+    public $all_parts; /**< sentence with all language parts replaced */
     
-    private $id;
-    private $dbConnection;
-    private $wordnik;
+    private $id; /**< the id of the sentence in the database */
+    private $dbConnection; /**< the default database connection */
+    private $wordnik; /**< the wordnik class, to determine word part of speech */
 
     //predefined values for the database//
-    private $tableName  = "sentence";
-    private $allRows    = "*";
+    private $tableName  = "sentence"; /**< the table name of this object */
+    private $allRows    = "*"; /**< the allrows value for this object */
 
     public function __construct($connection, $wordnik) {
+        /**
+         * instantiate a new sentence object
+         * @param $connection dbConnection object
+         * @param $wordnik wordnik object 
+         */
         $this->dbConnection = $connection;
         $this->wordnik = $wordnik;
     }
     
     private function loadSentenceFromDBRows($retVal) {
-        //set up a new sentence from a query
+        /**
+         * set up a new sentence from a query
+         * @param $retVal database object
+         */
         $this->id = retVal($retVal, 'id');
         $this->raw_sentence = retVal($retVal, 'raw_sentence');
         $this->with_proper = retVal($retVal, 'with_proper');
@@ -38,7 +46,10 @@ class sentence {
     }
     
     private function loadSentenceFromId($id) {
-        //load a sentence from an id, useful for passed values
+        /**
+         * load a sentence from an id, useful for passed values
+         * @param $id int value of id in database
+         */
         $id = cleanInput($id);
         
         $retVal = $this->dbConnection->selectQuery(
@@ -50,7 +61,11 @@ class sentence {
     }
     
     private function loadSentenceFromSentence($sentence) {
-        //load a sentence from a extant sentence
+        /**
+         * load a sentence from a extant sentence, 
+         * finds the sentence in the database and returns it
+         * @param $sentence string of sentence
+         */
         $thisSentence = cleanInput($sentence);
         
         $retVal = $this->dbConnection->selectQuery(
@@ -62,7 +77,9 @@ class sentence {
     }
     
     private function addSentence() {
-        //adds a sentence to the database
+        /**
+         * adds a sentence to the database
+         */
         
         $rsentence = $this->raw_sentence;
         $psentence = $this->with_proper;
@@ -76,6 +93,11 @@ class sentence {
     }
     
     private function cleanWord($word, $retType = 0) {
+        /**
+         * cleans individual words of invalid characters
+         * @param $word string of word
+         * @param $retType int sets what value to return, 0 returns only the cleaned word, 1 returns cleaned word with {} surrounding 
+         */
         $newWord = $word;
         for($n=0; $n<65; $n++) {
             //replace NUL through @
@@ -100,8 +122,13 @@ class sentence {
     }
     
     public function returnSentence($sentence) {
-        //check a sentence against the database, and either return
-        //the database query or the wordnik definition
+        /**
+         * check a sentence against the database, and either return
+         * the database query or the wordnik definition
+         * @param $sentence string of sentence
+         * @return string of raw sentence
+         */
+
         $this->loadSentenceFromSentence($sentence);
         
         if ($this->id > 0) {

@@ -46,9 +46,11 @@ if (isset ($_FILES["file"])) {
         }
         
         $newDoc = new docParser($connection, $globalWordnik);
-            
-        $newDoc->parseDoc($file_name);
         
+        $retVal = array();
+        $retVal = $newDoc->parseDoc($file_name);
+        
+        print_r($retVal);
     }
 } else {
 ?>
