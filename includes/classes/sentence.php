@@ -136,8 +136,8 @@ class sentence {
         } else {
             //the sentence does not exist, chop it up and make it an array
             $raw = $sentence;
-            $withProp = $sentence;
-            $allParts = $sentence;
+            $withProp = array();
+            $allParts = array();
             
             $sentArray = explode(" ", $sentence);
             
