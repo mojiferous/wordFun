@@ -45,7 +45,7 @@ class sentence {
         $this->all_parts = retVal($retVal, 'all_parts');
     }
     
-    private function loadSentenceFromId($id) {
+    public function loadSentenceFromId($id) {
         /**
          * load a sentence from an id, useful for passed values
          * @param $id int value of id in database
@@ -58,6 +58,21 @@ class sentence {
             "id = '".$id."'");
         
         $this->loadSentenceFromDBRows($retVal);
+    }
+    
+    public function returnAllSentenceIds() {
+        /**
+         * return all sentences from the database as a database object
+         * @return array as database query
+         */
+        
+        $retVal = $this->dbConnection->selectQuery(
+                'id',
+                $this->tableName,
+                '',
+                1);
+        
+        return $retVal;
     }
     
     private function loadSentenceFromSentence($sentence) {
@@ -149,10 +164,7 @@ class sentence {
                 $thisWord = $thisWord->returnWord(strtolower($searchWord));
                 
                 $finalWord = str_ireplace("{".$searchWord."}", "{".$thisWord->speechPart."}", $replWord);
-                if ($thisWord->speechPart != 'proper noun' 
-                        && $thisWord->speechPart != 'preposition' 
-                        && $thisWord->speechPart != 'definite-article' 
-                        && $thisWord->speechPart != 'conjunction') {
+                if ($this->checkSpeechPart($thisWord->speechPart,$searchWord)) {
                     //the word is not a proper noun, replace it in $withProp
                     $withProp[] = $finalWord;
                 } else {
@@ -165,10 +177,64 @@ class sentence {
             $this->with_proper = implode(" ", $withProp);
             $this->all_parts = implode(" ", $allParts);
             
-            $this->addSentence();
+            if(count($allParts) > 2 && count($allParts) < 15) {
+                //only add the sentence to the database if it is longer than one word or shorter than 15
+                $this->addSentence();
+            }
+            
         }
         
         return $this->raw_sentence;
+    }
+    
+    private function checkSpeechPart($speechPart,$word) {
+        /**
+         * returns a boolean to filter speech parts
+         * @return boolean 
+         */
+        switch ($speechPart) {
+//            case 'proper noun':
+//                return false;
+//                break;
+            case 'preposition':
+                return false;
+                break;
+            case 'definite-article':
+                return false;
+                break;
+            case 'conjuntion':
+                return false;
+                break;
+            case 'pronoun':
+                return false;
+                break;
+            case 'adjective':
+                return false;
+                break;
+            case 'adverb':
+                return false;
+                break;
+            default:
+                //check for certain words that make more sense included
+                switch(strtolower($word)) {
+                    case 'i':
+                        return false;
+                        break;
+                    case 'had':
+                        return false;
+                        break;
+                    case 'was':
+                        return false;
+                        break;
+                    case 'have':
+                        return false;
+                        break;
+                    default:
+                        return true;
+                        break;
+                }
+                break;
+        }
     }
     
 }

@@ -66,6 +66,9 @@ class docParser {
                     
                     $final = str_ireplace(chr(10), " ", $final);
                     $final = str_ireplace(chr(13), " ", $final);
+                    $final = str_ireplace("-", " ", $final);
+                    $final = str_ireplace("  ", " ", $final);
+                    $final = str_ireplace("  ", " ", $final);
                     $retArray[] = $newSent->returnSentence($final);
 
                 }

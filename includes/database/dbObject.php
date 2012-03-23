@@ -66,7 +66,11 @@ class dbObject {
          * @param $runRaw int run a raw query and return the query raw
          * @return array
          */
-        $query = "SELECT ".$rowClause." FROM ".$tableName." WHERE ".$whereClause;
+        $query = "SELECT ".$rowClause." FROM ".$tableName;
+        
+        if ($whereClause != '') {
+            $query .= " WHERE ".$whereClause;
+        }
         
         if ($runRaw == 1) {
             return $this->runRawQuery($query);

@@ -17,6 +17,7 @@ require_once 'classes/wordnik/wordnikClass.php';
 require_once 'classes/word.php';
 require_once 'classes/sentence.php';
 require_once 'classes/docParser.php';
+require_once 'classes/phrase.php';
 
 //load defaults
 $defaults = new defaults();
@@ -53,6 +54,16 @@ if (isset ($_FILES["file"])) {
         print_r($retVal);
     }
 } else {
+    $func = parseGet('func', '');
+    
+    switch($func) {
+        case 'output':
+            $search = parseGet('id', '');
+            $retSentence = new phrase($connection, $globalWordnik);
+
+            echo $retSentence->returnNewSentence($search);
+            break;
+        default:
 ?>
 
 <form action="index.php" method="post"
@@ -63,4 +74,4 @@ enctype="multipart/form-data">
 <input type="submit" name="submit" value="Submit" />
 </form>
 
-<?php } ?>
+<?php } } ?>

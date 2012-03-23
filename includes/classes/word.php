@@ -91,6 +91,28 @@ class word {
             "'".$word."','".$definition."','".$speechPart."'");
     }
     
+    public function randomWordOfType($type) {
+        /**
+         * sets the word to a random word of the passed type
+         * @param type string
+         */
+        
+        $retVal = $this->dbConnection->selectQuery(
+                'id',
+                $this->tableName,
+                "speechPart = '".$type."'",
+                1);
+        
+        $allIds = array();
+        while($row = mysql_fetch_array($retVal)) {
+            $id = $row['id'];
+            $allIds[] = $id;
+        }
+        
+        shuffle($allIds);
+        $this->loadWordFromId($allIds[0]);
+    }
+    
     public function returnWord($word) {
         /**
          * check a word against the database, and return the word object, either from
