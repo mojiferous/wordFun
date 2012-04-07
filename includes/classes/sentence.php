@@ -91,20 +91,39 @@ class sentence {
         $this->loadSentenceFromDBRows($retVal);
     }
     
+    private function loadSentenceFromProper($withProper) {
+        /**
+         * check the database for a similar existing sentence structure
+         * @param $withProper string of the with_proper variable 
+         */
+        
+        $retVal = $this->dbConnection->selectQuery(
+                $this->allRows,
+                $this->tableName,
+                "with_proper = '".$withProper."'");
+        
+        $this->loadSentenceFromDBRows($retVal);
+    }
+    
     private function addSentence() {
         /**
          * adds a sentence to the database
          */
         
-        $rsentence = $this->raw_sentence;
-        $psentence = $this->with_proper;
-        $asentence = $this->all_parts;
+        $rsentence = trim($this->raw_sentence);
+        $psentence = trim($this->with_proper);
+        $asentence = trim($this->all_parts);
         
-        //add the sentence
-        $this->dbConnection->insertQuery(
-            $this->tableName,
-            "raw_sentence, with_proper, all_parts",
-            "'".$rsentence."','".$psentence."','".$asentence."'");
+        $this->loadSentenceFromProper($psentence);
+        
+        if($this->id < 1) {
+            //add the sentence, but only if the with_proper sentence is new
+            $this->dbConnection->insertQuery(
+                $this->tableName,
+                "raw_sentence, with_proper, all_parts",
+                "'".$rsentence."','".$psentence."','".$asentence."'");
+        }
+        
     }
     
     private function cleanWord($word, $retType = 0) {
@@ -226,7 +245,19 @@ class sentence {
                     case 'was':
                         return false;
                         break;
+                    case 'were':
+                        return false;
+                        break;
+                    case 'a':
+                        return false;
+                        break;
                     case 'have':
+                        return false;
+                        break;
+                    case 'is':
+                        return false;
+                        break;
+                    case 'the':
                         return false;
                         break;
                     default:

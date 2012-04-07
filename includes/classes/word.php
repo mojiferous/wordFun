@@ -80,15 +80,17 @@ class word {
          */
         
         //clean the query
-        $word = $this->word;
-        $definition = serialize($this->definition);
-        $speechPart = $this->speechPart;
-        
-        //add the word
-        $this->dbConnection->insertQuery(
-            $this->tableName,
-            "word, definition, speechPart",
-            "'".$word."','".$definition."','".$speechPart."'");
+        if(trim($this->word) != '') {
+            $word = $this->word;
+            $definition = serialize($this->definition);
+            $speechPart = $this->speechPart;
+
+            //add the word
+            $this->dbConnection->insertQuery(
+                $this->tableName,
+                "word, definition, speechPart",
+                "'".$word."','".$definition."','".$speechPart."'");
+        }  
     }
     
     public function randomWordOfType($type) {
